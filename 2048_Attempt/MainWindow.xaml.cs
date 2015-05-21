@@ -1,47 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace _2048_Attempt
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private int[,] arr;
-        private Random genRandom;
+        private int[,] _arr;
+        private Random _genRandom;
 
         public MainWindow()
         {
             InitializeComponent();
-            initArray();
+            InitArray();
         }
 
         #region Methods
 
-        private void initArray()
+        private void InitArray()
         {
-            arr = new int[4, 4];
-            genRandom = new Random();
+            _arr = new int[4, 4];
+            _genRandom = new Random();
 
             //Init array values
-            for (int k = 0; k < 4; k++) // Column
+            for (var k = 0; k < 4; k++) // Column
             {
-                for (int j = 0; j < 4; j++) // Rows
+                for (var j = 0; j < 4; j++) // Rows
                 {
-                    arr[k, j] = 0;
+                    _arr[k, j] = 0;
                     //arr[k, j] = 2; //Test value
                 }
             }
@@ -53,132 +43,131 @@ namespace _2048_Attempt
             //arr[0, 2] = 2;
 
             //Generate 2 numbers randomly
-            int[,] newRanCoordinate;
+            var newRanCoordinate = Random();
+            _arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
             newRanCoordinate = Random();
-            arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
-            newRanCoordinate = Random();
-            arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
+            _arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
 
-            display();
+            Display();
         }
 
-        private bool moveGridUp(bool ranTwice)
+        private bool MoveGridUp(bool ranTwice)
         {
-            bool moved = false;
+            var moved = false;
 
-            for(int k = 3; k >= 0; k--)
+            for(var k = 3; k >= 0; k--)
             {
-                for(int j = 3; j >= 0; j--)
+                for(var j = 3; j >= 0; j--)
                 {
                     if (j + 1 < 4)
                     {
-                        if (ranTwice == false && (arr[k, j] == arr[k, j + 1] || arr[k, j] == 0))
+                        if (ranTwice == false && (_arr[k, j] == _arr[k, j + 1] || _arr[k, j] == 0))
                         {
-                            arr[k, j] += arr[k, j + 1];
-                            arr[k, j + 1] = 0;
+                            _arr[k, j] += _arr[k, j + 1];
+                            _arr[k, j + 1] = 0;
                             moved = true;
                         }
 
-                        if(ranTwice == true && arr[k, j] == 0)
+                        if(ranTwice && _arr[k, j] == 0)
                         {
-                            arr[k, j] += arr[k, j + 1];
-                            arr[k, j + 1] = 0;
+                            _arr[k, j] += _arr[k, j + 1];
+                            _arr[k, j + 1] = 0;
                             moved = true;
                         }
                     }
                 }
             }
-            display();
+            Display();
             return moved;
         }
 
-        private bool moveGridDown(bool ranTwice)
+        private bool MoveGridDown(bool ranTwice)
         {
-            bool moved = true;
+            var moved = false;
 
-            for (int k = 0; k < 4; k++)
+            for (var k = 0; k < 4; k++)
             {
-                for (int j = 0; j < 4; j++)
+                for (var j = 0; j < 4; j++)
                 {
                     if (j - 1 >= 0)
                     {
-                        if (ranTwice == false && (arr[k, j] == arr[k, j - 1] || arr[k, j] == 0))
+                        if (ranTwice == false && (_arr[k, j] == _arr[k, j - 1] || _arr[k, j] == 0))
                         {
-                            arr[k, j] += arr[k, j - 1];
-                            arr[k, j - 1] = 0;
+                            _arr[k, j] += _arr[k, j - 1];
+                            _arr[k, j - 1] = 0;
                             moved = true;
                         }
 
-                        if(ranTwice == true && arr[k, j] == 0)
+                        if(ranTwice && _arr[k, j] == 0)
                         {
-                            arr[k, j] += arr[k, j - 1];
-                            arr[k, j - 1] = 0;
+                            _arr[k, j] += _arr[k, j - 1];
+                            _arr[k, j - 1] = 0;
                             moved = true;
                         }
                     }
                 }
             }
-            display();
+            Display();
             return moved;
         }
 
-        private bool moveGridLeft(bool ranTwice)
+        private bool MoveGridLeft(bool ranTwice)
         {
-            bool moved = false;
+            var moved = false;
 
-            for (int k = 3; k >= 0; k--)
+            for (var k = 3; k >= 0; k--)
             {
-                for (int j = 3; j >= 0; j--)
+                for (var j = 3; j >= 0; j--)
                 {
                     if (k - 1 >= 0)
                     {
-                        if (ranTwice == false && (arr[k - 1, j] == arr[k, j] || arr[k - 1, j] == 0))
+                        if (ranTwice == false && (_arr[k - 1, j] == _arr[k, j] || _arr[k - 1, j] == 0))
                         {
-                            arr[k - 1, j] += arr[k, j];
-                            arr[k, j] = 0;
+                            _arr[k - 1, j] += _arr[k, j];
+                            _arr[k, j] = 0;
                             moved = true;
                         }
 
-                        if(ranTwice == true && arr[k - 1, j] == 0)
+                        if(ranTwice && _arr[k - 1, j] == 0)
                         {
-                            arr[k - 1, j] += arr[k, j];
-                            arr[k, j] = 0;
+                            _arr[k - 1, j] += _arr[k, j];
+                            _arr[k, j] = 0;
                             moved = true;
                         }
                     }
                 }
             }
-            display();
+            Display();
             return moved;
         }
 
-        private bool moveGridRight(bool ranTwice)
+        private bool MoveGridRight(bool ranTwice)
         {
-            bool moved = false;
+            var moved = false;
 
-            for (int k = 0; k < 4; k++)
+            for (var k = 0; k < 4; k++)
             {
-                for (int j = 0; j < 4; j++)
+                for (var j = 0; j < 4; j++)
                 {
                     if (k + 1 < 4)
                     {
-                        if (ranTwice == false && (arr[k + 1, j] == arr[k, j] || arr[k + 1, j] == 0))
+                        if (ranTwice == false && (_arr[k + 1, j] == _arr[k, j] || _arr[k + 1, j] == 0))
                         {
-                            arr[k + 1, j] += arr[k, j];
-                            arr[k, j] = 0;
+                            _arr[k + 1, j] += _arr[k, j];
+                            _arr[k, j] = 0;
                             moved = true;
                         }
 
-                        if(ranTwice == true && arr[k + 1, j] == 0)
+                        if(ranTwice && _arr[k + 1, j] == 0)
                         {
-                            arr[k + 1, j] += arr[k, j];
-                            arr[k, j] = 0;
+                            _arr[k + 1, j] += _arr[k, j];
+                            _arr[k, j] = 0;
                             moved = true;
                         }
                     }
                 }
             }
-            display();
+            Display();
             return moved;
         }
 
@@ -193,14 +182,14 @@ namespace _2048_Attempt
             {
                 for(var j = 0; j < 4; j++)
                 {
-                    if (arr[k, j] != 0) continue;
+                    if (_arr[k, j] != 0) continue;
                     emptyPost.Add(new Position(k, j));
                     size++;
                 }
             }
 
             var values = new int[1, 2];
-            var pos = genRandom.Next(size);
+            var pos = _genRandom.Next(size);
             try
             {
                 var item = emptyPost[pos];
@@ -218,27 +207,27 @@ namespace _2048_Attempt
 
         }
 
-        private void display()
+        private void Display()
         {
-            lbl00.Content = arr[0, 0];
-            lbl01.Content = arr[0, 1];
-            lbl02.Content = arr[0, 2];
-            lbl03.Content = arr[0, 3];
+            lbl00.Content = _arr[0, 0];
+            lbl01.Content = _arr[0, 1];
+            lbl02.Content = _arr[0, 2];
+            lbl03.Content = _arr[0, 3];
 
-            lbl10.Content = arr[1, 0];
-            lbl11.Content = arr[1, 1];
-            lbl12.Content = arr[1, 2];
-            lbl13.Content = arr[1, 3];
+            lbl10.Content = _arr[1, 0];
+            lbl11.Content = _arr[1, 1];
+            lbl12.Content = _arr[1, 2];
+            lbl13.Content = _arr[1, 3];
 
-            lbl20.Content = arr[2, 0];
-            lbl21.Content = arr[2, 1];
-            lbl22.Content = arr[2, 2];
-            lbl23.Content = arr[2, 3];
+            lbl20.Content = _arr[2, 0];
+            lbl21.Content = _arr[2, 1];
+            lbl22.Content = _arr[2, 2];
+            lbl23.Content = _arr[2, 3];
 
-            lbl30.Content = arr[3, 0];
-            lbl31.Content = arr[3, 1];
-            lbl32.Content = arr[3, 2];
-            lbl33.Content = arr[3, 3];
+            lbl30.Content = _arr[3, 0];
+            lbl31.Content = _arr[3, 1];
+            lbl32.Content = _arr[3, 2];
+            lbl33.Content = _arr[3, 3];
         }
 
         private void CheckFinalOrGenerateNumber()
@@ -250,7 +239,8 @@ namespace _2048_Attempt
             }
 
             else
-                arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
+                _arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
+            Display();
         }
 
         #endregion
@@ -262,30 +252,30 @@ namespace _2048_Attempt
             switch (e.Key)
             {
                 case Key.Up:
-                    if (moveGridUp(false) &&
-                        moveGridUp(true)) //Repeats the loop to avoid having numbers stay behind
+                    if (MoveGridUp(false) &&
+                        MoveGridUp(true)) //Repeats the loop to avoid having numbers stay behind
                     {              //This is a fix albeit not a very good one computationally speaking
                         CheckFinalOrGenerateNumber();
                     }
                     break;
                 case Key.Down:
-                    if (moveGridDown(false) &&
-                        moveGridDown(true)) //Repeats the loop to avoid having numbers stay behind
+                    if (MoveGridDown(false) &&
+                        MoveGridDown(true)) //Repeats the loop to avoid having numbers stay behind
                     {                //This is a fix albeit not a very good one computationally speaking
                         CheckFinalOrGenerateNumber();
                     }
                     break;
                 case Key.Left:
-                    if (moveGridLeft(false) &&
-                        moveGridLeft(true)) //Repeats the loop to avoid having numbers stay behind
+                    if (MoveGridLeft(false) &&
+                        MoveGridLeft(true)) //Repeats the loop to avoid having numbers stay behind
                     {                   //This is a fix albeit not a very good one computationally speaking
 
                         CheckFinalOrGenerateNumber();
                     }
                     break;
                 case Key.Right:
-                    if (moveGridRight(false) &&
-                        moveGridRight(true)) //Repeats the loop to avoid having numbers stay behind
+                    if (MoveGridRight(false) &&
+                        MoveGridRight(true)) //Repeats the loop to avoid having numbers stay behind
                     {                    //This is a fix albeit not a very good one computationally speaking
                         CheckFinalOrGenerateNumber();
                     }

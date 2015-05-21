@@ -184,31 +184,28 @@ namespace _2048_Attempt
 
         private int[,] Random()
         {
-            int size = 0;
-            int pos = 0;
-            List<int> xPos = new List<int>();
-            List<int> yPos = new List<int>();
+            var size = 0;
+            //Store empty positions in a list
+            var emptyPost = new List<Position>();
 
             //Loop through all to find empty places
-            for(int k = 0; k < 4; k++)
+            for(var k = 0; k < 4; k++)
             {
-                for(int j = 0; j < 4; j++)
+                for(var j = 0; j < 4; j++)
                 {
-                    if(arr[k, j] == 0)
-                    {
-                        xPos.Add(k);
-                        yPos.Add(j);
-                        size++;
-                    }
+                    if (arr[k, j] != 0) continue;
+                    emptyPost.Add(new Position(k, j));
+                    size++;
                 }
             }
 
-            int[,] values = new int[1, 2];
-            pos = genRandom.Next(size);
+            var values = new int[1, 2];
+            var pos = genRandom.Next(size);
             try
             {
-                values[0, 0] = xPos[pos];
-                values[0, 1] = yPos[pos];
+                var item = emptyPost[pos];
+                values[0, 0] = item.PosX;
+                values[0, 1] = item.PosY;
             }
 
             catch(ArgumentOutOfRangeException)
@@ -244,81 +241,58 @@ namespace _2048_Attempt
             lbl33.Content = arr[3, 3];
         }
 
+        private void CheckFinalOrGenerateNumber()
+        {
+            var newRanCoordinate = Random();
+            if (newRanCoordinate[0, 0] == -1 && newRanCoordinate[0, 1] == -1)
+            {
+                MessageBox.Show("Game Over!");
+            }
+
+            else
+                arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
+        }
+
         #endregion
 
         #region User Input
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Up)
+            switch (e.Key)
             {
-                if (moveGridUp(false) &&
-                moveGridUp(true)) //Repeats the loop to avoid having numbers stay behind
-                {              //This is a fix albeit not a very good one computationally speaking
-                    int[,] newRanCoordinate;
-                    newRanCoordinate = Random();
-                    if(newRanCoordinate[0, 0] == -1 && newRanCoordinate[0, 1] == -1)
-                    {
-                        MessageBox.Show("Game Over!");
+                case Key.Up:
+                    if (moveGridUp(false) &&
+                        moveGridUp(true)) //Repeats the loop to avoid having numbers stay behind
+                    {              //This is a fix albeit not a very good one computationally speaking
+                        CheckFinalOrGenerateNumber();
                     }
-
-                    else
-                        arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
-                }
-            }
-
-            else if (e.Key == Key.Down)
-            {
-                if (moveGridDown(false) &&
-                moveGridDown(true)) //Repeats the loop to avoid having numbers stay behind
-                {                //This is a fix albeit not a very good one computationally speaking
-                    int[,] newRanCoordinate;
-                    newRanCoordinate = Random();
-                    if (newRanCoordinate[0, 0] == -1 && newRanCoordinate[0, 1] == -1)
-                    {
-                        MessageBox.Show("Game Over!");
+                    break;
+                case Key.Down:
+                    if (moveGridDown(false) &&
+                        moveGridDown(true)) //Repeats the loop to avoid having numbers stay behind
+                    {                //This is a fix albeit not a very good one computationally speaking
+                        CheckFinalOrGenerateNumber();
                     }
+                    break;
+                case Key.Left:
+                    if (moveGridLeft(false) &&
+                        moveGridLeft(true)) //Repeats the loop to avoid having numbers stay behind
+                    {                   //This is a fix albeit not a very good one computationally speaking
 
-                    else
-                        arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
-                }
-            }
-
-            else if (e.Key == Key.Left)
-            {
-                if (moveGridLeft(false) &&
-                moveGridLeft(true)) //Repeats the loop to avoid having numbers stay behind
-                {                   //This is a fix albeit not a very good one computationally speaking
-
-                    int[,] newRanCoordinate;
-                    newRanCoordinate = Random();
-                    if (newRanCoordinate[0, 0] == -1 && newRanCoordinate[0, 1] == -1)
-                    {
-                        MessageBox.Show("Game Over!");
+                        CheckFinalOrGenerateNumber();
                     }
-
-                    else
-                        arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
-                }
-            }
-
-            else if (e.Key == Key.Right)
-            {
-                if (moveGridRight(false) &&
-                moveGridRight(true)) //Repeats the loop to avoid having numbers stay behind
-                {                    //This is a fix albeit not a very good one computationally speaking
-                    int[,] newRanCoordinate;
-                    newRanCoordinate = Random();
-                    if (newRanCoordinate[0, 0] == -1 && newRanCoordinate[0, 1] == -1)
-                    {
-                        MessageBox.Show("Game Over!");
+                    break;
+                case Key.Right:
+                    if (moveGridRight(false) &&
+                        moveGridRight(true)) //Repeats the loop to avoid having numbers stay behind
+                    {                    //This is a fix albeit not a very good one computationally speaking
+                        CheckFinalOrGenerateNumber();
                     }
-
-                    else
-                        arr[newRanCoordinate[0, 0], newRanCoordinate[0, 1]] = 2;
-                }
+                    break;
             }
         }
+
         #endregion
     }
 }
